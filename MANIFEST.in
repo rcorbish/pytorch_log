@@ -1,0 +1,4 @@
+include log_viewer/schema.sql
+graft log_viewer/static
+graft log_viewer/templates
+global-exclude *.pyc

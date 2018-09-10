@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Run {{ run.time }} {% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('blog.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div>
+      Losses
+      <img src='{{ run.get_base64_losses() }}'>
+    <ul>
+    {% for epoch in run.epochs() %}
+      <li><a href="{{ epoch['name'] }}">{{ epoch['name'] }}</a></li>
+    {% endfor %}    
+    </ul>
+  </div>
+{% endblock %} 

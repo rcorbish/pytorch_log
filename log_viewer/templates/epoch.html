@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Epoch{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div>
+      <b>{{ epoch['name'] }}</b>
+  </div>
+
+  <div>
+    <img src='{{ epoch.get_base64_image() }}'>
+  </div>
+{% endblock %} 
