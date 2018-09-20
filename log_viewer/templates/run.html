@@ -1,20 +1,28 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Run {{ run.time }} {% endblock %}</h1>
-  {% if g.user %}
-    <a class="action" href="{{ url_for('blog.create') }}">New</a>
-  {% endif %}
+  {% block title %}Run {{ run.time }} {% endblock %}
 {% endblock %}
 
 {% block content %}
-  <div>
-      Losses
-      <img src='{{ run.get_base64_losses() }}'>
-    <ul>
-    {% for epoch in run.epochs() %}
-      <li><a href="{{ epoch['name'] }}">{{ epoch['name'] }}</a></li>
-    {% endfor %}    
-    </ul>
+  <div class='main-content'>
+      <div class='logs'>
+          Logs<br>
+          {% for txt in run.get_model_specs() %}
+            <br>{{ txt }}
+          {% endfor %}
+      </div>
+      <div class='losses-chart'>
+      Losses<br>
+      <img class='losses-image' width='100%' height='100%' src='{{ run.get_base64_losses() }}'>
+      </div>
+      <div class='epoch-list'>
+          Epochs
+          <ul>
+          {% for epoch in run.epochs() %}
+            <li width='100%'><a href="{{ epoch['name'] }}">{{ epoch['name'] }}</a></li>
+          {% endfor %}    
+          </ul>
+      </div>
   </div>
 {% endblock %} 

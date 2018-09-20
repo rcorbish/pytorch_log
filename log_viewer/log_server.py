@@ -24,7 +24,8 @@ app = Flask( __name__ )
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-import log_viewer
+from log_viewer import LogViewer
+
 
 class LogServer(HTTPServer):
     def __init__( self, run_dir ) :
@@ -43,7 +44,7 @@ class LogServerHandler( BaseHTTPRequestHandler) :
         self.send_response( 200 )
         self.end_headers()
 
-        lv = log_viewer.LogViewer( self.server.run_dir )
+        lv = LogViewer( self.server.run_dir )
         for model in lv.models() :
             self.wfile.write( b"<br>" )
             s = model.model_name + ":" + model.data_name
@@ -62,10 +63,13 @@ def main() :
         sys.exit(2)
 
     run_dir = 'runs' if len(args) == 0 else args[0]
+    lv = LogViewer( run_dir )
+    lv.clean()
+
     ls = LogServer( run_dir ) 
     ls.start() 
 
-    lv = log_viewer.LogViewer( run_dir )
+    lv = LogViewer( run_dir )
     for model in lv.models() :
         print( model.model_name + ":" + model.data_name )
         latest = model.most_recent()

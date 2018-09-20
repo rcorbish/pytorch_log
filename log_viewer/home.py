@@ -13,9 +13,7 @@ bp = Blueprint( 'log_main', __name__ )
 def index():    
     lv = log_viewer.LogViewer( current_app.config['BASE_DIR'] ) 
 
-    models = list( lv.models() )
-    #models = []
-    return render_template( 'home.html', models=models )
+    return render_template( 'home.html', models=lv.models() )
 
 
 
@@ -28,10 +26,19 @@ def run( model, data, time ):
 
 
 
+@bp.route('/run/<string:model>/<string:data>/<string:time>/', methods=['DELETE'] )
+def delete( model, data, time ):
+    lv = log_viewer.LogViewer( current_app.config['BASE_DIR'] ) 
+    run = lv.get_run( model, data, time )
+    run.delete()
+    return "OK"
+
+
 @bp.route('/run/<string:model>/<string:data>/<string:time>/<string:epoch>/')
 def epoch( model, data, time, epoch ):
     lv = log_viewer.LogViewer( current_app.config['BASE_DIR'] ) 
+    run = lv.get_run( model, data, time )
 
-    epoch = lv.get_epoch( model, data, time, epoch )
-    return render_template( 'epoch.html', epoch=epoch )
+    epoch = run.get_epoch( epoch )
+    return render_template( 'epoch.html', run=run, epoch=epoch )
 

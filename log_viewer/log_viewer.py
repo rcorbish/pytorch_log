@@ -20,6 +20,17 @@ from dateutil import parser
 import imageio
 import base64
 
+def rmtree( root ) :
+    for top,dirs,files in os.walk( root, topdown=False ) :
+        for file in files :
+            fn = os.path.join( top, file )
+            os.remove( fn )
+        for dir in dirs :
+            fn = os.path.join( top, dir )
+            os.rmdir( fn )
+    os.rmdir( top )
+
+
 class LogViewer :
 
     def __init__(self, base_dir ):
@@ -59,9 +70,12 @@ class LogViewer :
         epoch = run.get_epoch( epoch )
         return epoch
 
+    def clean( self ) :
+        for model in self.models() :
+            model.clean()
 
 
-class Model :
+class Model  :
     def __init__(self, model_name, data_name, base_dir ):
         self.model_name = model_name
         self.data_name = data_name
@@ -69,7 +83,6 @@ class Model :
 
     def runs( self ) :
         rg = r'\d{4}\-\d{2}\-\d{2} \d{2}\:\d{2}\:\d{2}'
-        #run_times = [ x for x in os.listdir( self.base_dir ) if re.match( rg, x ) is not None ] 
         r = [ x for x in os.listdir( self.base_dir ) if re.match( rg, x ) is not None ] 
         s = sorted( r, key=lambda x : datetime.datetime.strptime( x, r'%Y-%m-%d %H:%M:%S' ), reverse=True )
  
@@ -77,25 +90,30 @@ class Model :
             run = Run( self, run_time )
             yield run 
 
+
     def most_recent( self, n=0 ) :
         r = list( self.runs() ) 
         s = sorted( r, key=lambda x : x.time, reverse=True )
         return s[n] if n<len(s) else None
 
 
-
-    def get_logs( self ) :
-        lines = []
-        try :
-            with open( self.base_dir + r'/logfile.txt' ) as f :
-                lines = f.readlines()
-            return lines
-        except Exception :
-            return []
-
     def get_run( self, run_time ) :
         run = Run( self, run_time  )
         return run
+
+
+    def delete_run( self, run_time ) :
+        run = Run( self, run_time  )
+        run.delete() 
+
+
+    def clean( self ) :
+        for run in self.runs() :
+            run.clean()
+
+        runs = list( self.runs() )
+        if len(runs) == 0 :
+            os.rmdir( self.base_dir )
 
 
 class Run :
@@ -127,7 +145,41 @@ class Run :
         buf = io.BytesIO()
         plt.savefig( buf, format='png' )
         encoded = base64.b64encode( buf.getvalue() ).decode()
-        return 'data:image/png;base64,{}'.format( encoded )
+        return r'data:image/png;base64,{}'.format( encoded )
+
+
+    def get_logs( self, tail=50 ) :
+        lines = []
+        try :
+            with open( self.base_dir + r'/logfile.txt' ) as f :
+                lines = f.readlines()
+            return lines[-tail:]
+        except Exception :
+            return []
+
+
+    def get_model_specs( self ) :
+        lines = []
+        try :
+            with open( self.base_dir + r'/models.txt' ) as f :
+                lines = f.readlines()
+            return lines
+        except Exception :
+            return []
+       
+
+    def delete( self ) :
+        rmtree( self.base_dir )
+
+
+    def clean( self ) :
+        for epoch in self.epochs() :
+            epoch.clean()
+
+        epochs = list( self.epochs() )
+        if len(epochs) == 0 :
+            os.rmdir( self.base_dir )
+
 
 
 class Epoch : 
@@ -154,35 +206,27 @@ class Epoch :
             return imageio.imread( fn )
         return None
 
-        
+
 
     def get_base64_image( self, index=0 ) :
         fn = self.get_image_file( index )
         if fn is not None :
             encoded = base64.b64encode(open( fn, "rb").read()).decode()
-            return 'data:image/png;base64,{}'.format( encoded )
+            return r'data:image/png;base64,{}'.format( encoded )
         return None
+
+
 
     def get_params( self ) :
         pass
 
 
+    def delete( self ) :
+        for file in os.listdir( self.base_dir ) :
+            os.remove( file )
 
-unloader = transforms.ToPILImage()
 
-def draw( data ) :    
-    plt.figure()
-    d = data.tolist() if isinstance(data, torch.Tensor ) else data
-    #print( isinstance( data, torch.Tensor ), d )
-    plt.plot( d ) 
-    plt.show()
-
-def drawImage( data ) :
-    plt.figure()
-    local = data.cpu() * 255.0
-    local = local.type( torch.uint8 )
-    local = local.resize_( 1, 28, 28 ).transpose( 1, 2 )
-    img = unloader( local )
-    plt.imshow( img )
-    plt.show()
-
+    def clean( self ) :
+        files = list( os.listdir( self.base_dir ) )
+        if len(files) == 0 :
+            os.rmdir( self.base_dir )

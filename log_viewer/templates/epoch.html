@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Epoch{% endblock %}</h1>
+  <a href='..'>Run {{ run.time }}</a> | {% block title %}{{ epoch['name'] }}{% endblock %}
 {% endblock %}
 
 {% block content %}
