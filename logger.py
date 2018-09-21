@@ -15,7 +15,7 @@ class Logger :
         self.print_interval = 100
         now = datetime.datetime.now()
         dt = now.strftime('%Y-%m-%d %H:%M:%S') 
-        self.data_subdir = 'runs/{}/{}/{}'.format(model_name, data_name, dt)
+        self.data_subdir = '/var/tmp/runs/{}/{}/{}'.format(model_name, data_name, dt)
         self.makedir( self.data_subdir ) 
 
         with  open( self.data_subdir+"/models.txt", "w" ) as modelFile :
@@ -68,7 +68,7 @@ class Logger :
                 if isinstance( losses, collections.Sequence ) :
                     ix = 1
                     for l in losses :
-                        tmp['loss-'+ix] = l.item() if torch.is_tensor(l) else l
+                        tmp['loss-{}'.format(ix)] = l.item() if torch.is_tensor(l) else l
                         ix = ix + 1
                 else :
                     tmp['loss'] = losses
@@ -77,11 +77,9 @@ class Logger :
             avg_losses = []
             for k in losses.keys() :
                 a = losses[k] 
-                if torch.is_tensor(a) :
-                    losses[k] = a.item()
-                avg = sum( losses[k] ) / len( losses[k] )
-                self.losses.get(k,[]).append( avg )
-                avg_losses.append( avg )
+                #avg = sum( losses[k] ) / len( losses[k] )
+                self.losses.get(k,[]).append( a )
+                avg_losses.append( a )
 
             # print the current losses as a list - convert to string
             astr = " ".join( list( map( lambda e: ('%5.4f' % e), avg_losses ) )  )
