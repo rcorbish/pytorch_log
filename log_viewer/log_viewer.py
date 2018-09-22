@@ -107,6 +107,10 @@ class Model  :
         run.delete() 
 
 
+    def delete( self ) :
+        rmtree( self.base_dir )
+
+
     def clean( self ) :
         for run in self.runs() :
             run.clean()

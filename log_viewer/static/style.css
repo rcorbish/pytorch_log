@@ -2,17 +2,17 @@
 html { 
     font-family: sans-serif; 
     background: #eee; 
-    padding: 1rem; 
+    padding: 0 ; 
 }
 
 body { 
-    margin: 0 auto; 
+    margin: 0 ; 
     background: white; 
 }
 
 h1 { 
     color: #377ba8; 
-    margin: 1rem 0; 
+    margin: 1rem; 
 }
 
 a { 
@@ -25,7 +25,6 @@ hr {
 }
 
 nav {
-    position: absolute :
     top: 0 ;
     width: 100% ;
     margin: 0 ;
@@ -34,7 +33,6 @@ nav {
 }
 
 nav h1 {
-    top: 0 ;
     width: 100% ;
  }
 

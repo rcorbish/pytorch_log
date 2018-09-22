@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  {% block title %}Models{% endblock %}
+{{ model['model_name'] }} / {{ model['data_name'] }} | Runs 
 {% endblock %}
 
 {% block content %}
     <article class="post">
       <header>
         <div>
-         <ul>
-          {% for model in models %}
-          <li><a href="run/{{ model['model_name'] }}/{{ model['data_name'] }}">{{ model['model_name'] }}/{{ model['data_name'] }}</a>
+          <ul>
+          {% for run in model.runs() %}
+          <li><a href="run/{{ model['model_name'] }}/{{ model['data_name'] }}/{{ run['time'] }}/">{{ run['time'] }}</a>
             <button class="del-button"
-              data-href="run/{{ model['model_name'] }}/{{ model['data_name'] }}"
-              data-label="{{ model['model_name'] }}/{{ model['data_name'] }}"
+              data-href="run/{{ model['model_name'] }}/{{ model['data_name'] }}/{{ run['time'] }}/"
+              data-label="{{ run['time'] }}"
             > &#x1f5d1; 
             </button>
           </li>
@@ -23,6 +23,7 @@
       </header>
     </article>
 
+    
   <script>
       window.addEventListener( "load", function(e) {
           var xhr = new XMLHttpRequest() 
