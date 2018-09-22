@@ -10,14 +10,14 @@
         <div>
           <ul>
           {% for run in model.runs() %}
-          <li><a href="run/{{ model['model_name'] }}/{{ model['data_name'] }}/{{ run['time'] }}/">{{ run['time'] }}</a>
+          <li><a href="{{ run['time'] }}/">{{ run['time'] }}</a>
             <button class="del-button"
-              data-href="run/{{ model['model_name'] }}/{{ model['data_name'] }}/{{ run['time'] }}/"
+              data-href="{{ run['time'] }}/"
               data-label="{{ run['time'] }}"
             > &#x1f5d1; 
             </button>
           </li>
-          {% endfor %}    
+          {% endfor %}
         </ul>
         </div>
       </header>

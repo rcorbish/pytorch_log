@@ -32,26 +32,26 @@ def model( model_name, data_name ):
 
 
 
-@bp.route('/run/<string:model>/<string:data>/<string:time>/', methods=['DELETE'] )
-def deleteRun( model, data, time ):
+@bp.route('/run/<string:model_name>/<string:data_name>/<string:time>/', methods=['DELETE'] )
+def deleteRun( model_name, data_name, time ):
     lv = log_viewer.LogViewer( current_app.config['BASE_DIR'] ) 
-    run = lv.get_run( model, data, time )
+    run = lv.get_run( model_name, data_name, time )
     run.delete()
     return "OK"
 
 
-@bp.route('/run/<string:model>/<string:data>/<string:time>/', methods=['GET'] )
-def run( model, data, time ):
+@bp.route('/run/<string:model_name>/<string:data_name>/<string:time>/', methods=['GET'] )
+def run( model_name, data_name, time ):
     lv = log_viewer.LogViewer( current_app.config['BASE_DIR'] ) 
 
-    run = lv.get_run( model, data, time )
-    return render_template( 'run.html', run=run )
+    run = lv.get_run( model_name, data_name, time )
+    return render_template( 'run.html', run=run, model_name=model_name, data_name=data_name )
 
 
-@bp.route('/run/<string:model>/<string:data>/<string:time>/<string:epoch>/')
-def epoch( model, data, time, epoch ):
+@bp.route('/run/<string:model_name>/<string:data_name>/<string:time>/<string:epoch>/')
+def epoch( model_name, data_name, time, epoch ):
     lv = log_viewer.LogViewer( current_app.config['BASE_DIR'] ) 
-    run = lv.get_run( model, data, time )
+    run = lv.get_run( model_name, data_name, time )
 
     epoch = run.get_epoch( epoch )
     return render_template( 'epoch.html', run=run, epoch=epoch )
