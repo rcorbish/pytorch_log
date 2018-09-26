@@ -18,7 +18,7 @@ def index():
 @bp.route('/run/<string:model_name>/<string:data_name>/', methods=['DELETE'] )
 def deleteModel( model_name, data_name ):
     lv = log_viewer.LogViewer( current_app.config['BASE_DIR'] ) 
-    model = lv.get_model( model_name, data_name )
+    model = lv.get_model( model_name, data_namel )
     model.delete()
     return "OK"
 

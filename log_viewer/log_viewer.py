@@ -19,8 +19,17 @@ import getopt
 from dateutil import parser
 import imageio
 import base64
-
+'''
+    This contains the representations of a test run of a model,
+    each epoch it ran and the model setup and parameters
+'''
 def rmtree( root ) :
+    '''
+    recursively delete the root directory
+
+    @parameters
+    root: the name of the root directory
+    '''
     for top,dirs,files in os.walk( root, topdown=False ) :
         for file in files :
             fn = os.path.join( top, file )
@@ -31,8 +40,13 @@ def rmtree( root ) :
     os.rmdir( top )
 
 
-class LogViewer :
 
+class LogViewer :
+    '''
+    The main class through which models, runs and epochs
+    are accessed. It manages data under a (configured) 
+    root directory.
+    '''
     def __init__(self, base_dir ):
         self.base_dir = base_dir
         try:
