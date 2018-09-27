@@ -139,6 +139,7 @@ class Run :
         self.time = parser.parse( run_time )
         self.base_dir = model.base_dir + "/" + run_time
 
+
     def epochs( self ) :
         epoch_names = [ x for x in os.listdir( self.base_dir ) if x.startswith(r'epoch-') ] 
         get_integers_from_string = lambda x :  int( ''.join( [ s for s in re.split( '\D+', x ) if s.isdigit() ] ) )
@@ -155,6 +156,7 @@ class Run :
             if img is not None :
                 images.append( img )
         buf = None        
+        print( 'xxxxxxxxxxxxxxxxxxxxxxxxxx' )
         if len( images ) > 0 :
             buf = io.BytesIO()
             imageio.mimwrite( buf, images, format='gif', duration=0.25, loop=1 )

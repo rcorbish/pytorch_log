@@ -1,6 +1,6 @@
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, current_app
+    Blueprint, flash, g, redirect, render_template, request, url_for, current_app, send_file
 )
 from werkzeug.exceptions import abort
 
@@ -46,6 +46,17 @@ def run( model_name, data_name, time ):
 
     run = lv.get_run( model_name, data_name, time )
     return render_template( 'run.html', run=run, model_name=model_name, data_name=data_name )
+
+
+
+@bp.route('/run/<string:model_name>/<string:data_name>/<string:time>/movie', methods=['GET'] )
+def movie( model_name, data_name, time ):
+    lv = log_viewer.LogViewer( current_app.config['BASE_DIR'] ) 
+
+    run = lv.get_run( model_name, data_name, time )
+    iob = run.get_movie()
+    send_file( iob, "image/gif" )
+
 
 
 @bp.route('/run/<string:model_name>/<string:data_name>/<string:time>/<string:epoch>/')
