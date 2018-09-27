@@ -51,11 +51,12 @@ def run( model_name, data_name, time ):
 
 @bp.route('/run/<string:model_name>/<string:data_name>/<string:time>/movie', methods=['GET'] )
 def movie( model_name, data_name, time ):
+    print( "Movies ..." )
     lv = log_viewer.LogViewer( current_app.config['BASE_DIR'] ) 
 
     run = lv.get_run( model_name, data_name, time )
     iob = run.get_movie()
-    send_file( iob, "image/gif" )
+    return send_file( iob, "image/gif" )
 
 
 

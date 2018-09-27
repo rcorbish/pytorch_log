@@ -154,12 +154,12 @@ class Run :
         for epoch in self.epochs() :
             img = epoch.get_image() 
             if img is not None :
-                images.append( img )
+                images.insert(0, img )
         buf = None        
-        print( 'xxxxxxxxxxxxxxxxxxxxxxxxxx' )
         if len( images ) > 0 :
             buf = io.BytesIO()
-            imageio.mimwrite( buf, images, format='gif', duration=0.25, loop=1 )
+            imageio.mimwrite( buf, images, format='gif', duration=0.25, loop=2 )
+            buf.seek(0)
         return buf
 
 
@@ -167,8 +167,6 @@ class Run :
     def get_epoch( self, epoch_name ) :
         epoch = Epoch( epoch_name, self.base_dir )
         return epoch
-
-
 
     def get_losses( self ) :
         fn = self.base_dir + r'/losses'
@@ -254,6 +252,13 @@ class Epoch :
             return r'data:image/png;base64,{}'.format( encoded )
         return None
 
+
+
+
+    def get_epoch_time( self ) :
+        t = os.path.getmtime( self.base_dir )
+        ts = datetime.datetime.fromtimestamp( t )
+        return datetime.datetime.strftime( ts, r'%Y-%m-%d %H:%M:%S' )
 
 
     def get_params( self ) :
