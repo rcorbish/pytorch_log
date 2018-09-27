@@ -147,14 +147,33 @@ class Run :
             epoch = Epoch( epoch_name, self.base_dir )
             yield epoch
 
+
+    def get_movie( self ) :
+        images = []
+        for epoch in self.epochs() :
+            img = epoch.get_image() 
+            if img is not None :
+                images.append( img )
+        buf = None        
+        if len( images ) > 0 :
+            buf = io.BytesIO()
+            imageio.mimwrite( buf, images, format='gif', duration=0.25, loop=1 )
+        return buf
+
+
+
     def get_epoch( self, epoch_name ) :
         epoch = Epoch( epoch_name, self.base_dir )
         return epoch
+
+
 
     def get_losses( self ) :
         fn = self.base_dir + r'/losses'
         L = torch.load( fn ) if os.path.exists( fn ) else []
         return L
+
+
 
     def get_base64_losses( self ) :
         L = self.get_losses()

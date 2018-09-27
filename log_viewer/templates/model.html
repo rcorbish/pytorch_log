@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 
+{% block title %}{{model_name}} | {{ data_name }}{% endblock %}
+
+
 {% block header %}
 {{ model['model_name'] }} / {{ model['data_name'] }} | Runs 
 {% endblock %}

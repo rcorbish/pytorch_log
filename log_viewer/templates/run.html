@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}{{model_name}} | {{ data_name }} | {{ run.time }} {% endblock %}
+
 {% block header %}
-  {% block title %} 
-  <a href="..">{{model_name}} / {{ data_name }}</a> | {{ run.time }} | Epochs {% endblock %}
+  <a href="..">{{model_name}} / {{ data_name }}</a> | {{ run.time }} | Epochs 
 {% endblock %}
 
 {% block content %}
@@ -26,4 +27,7 @@
           </ul>
       </div>
   </div>
+
+  <img class='movie' width='100%' src='{{ run.get_movie() }}'>
+
 {% endblock %} 
