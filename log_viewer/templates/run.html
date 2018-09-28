@@ -3,7 +3,7 @@
 {% block title %}{{model_name}} | {{ data_name }} | {{ run.time }} {% endblock %}
 
 {% block header %}
-  <a href="..">{{model_name}} / {{ data_name }}</a> | {{ run.time }} | Epochs 
+  <a href="..">{{model_name}} / {{ data_name }}</a> | {{ run.time }} 
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,8 @@
       <div class='losses-chart'>
       Losses<br>
       <img class='losses-image' width='100%' height='100%' src='{{ run.get_base64_losses() }}'>
-      </div>
+      <img class='movie' width='100%' src='movie' width='50%' >
+    </div>
       <div class='epoch-list'>
           Epochs
           <ul>
@@ -28,6 +29,5 @@
       </div>
   </div>
 
-  <img class='movie' width='100%' src='movie'>
 
 {% endblock %} 

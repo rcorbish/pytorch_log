@@ -12,7 +12,7 @@ import collections
 class Logger :
 
     def __init__(self, model_name, data_name, models=[] ):
-        self.print_interval = 10
+        self.print_interval = 200
         now = datetime.datetime.now()
         dt = now.strftime('%Y-%m-%d %H:%M:%S') 
         self.data_subdir = '/var/tmp/runs/{}/{}/{}'.format(model_name, data_name, dt)
@@ -52,14 +52,16 @@ class Logger :
             self.makedir( dn )
         return dn
 
+
     def log_images( self, X, epoch ) :
         X = X if isinstance( X, collections.Sequence ) else [ X ]
         image_num = 0 
         ed = self.get_epoch_dir( epoch )
         for img in X :
             fn = ( ed + "/image-{}.png" ).format( image_num )
-            vutils.save_image( img.detach(), fn ) #, normalize=True)
+            vutils.save_image( img.detach(), fn, nrow=4, normalize=True )
             image_num = image_num + 1
+
 
     def log( self, losses, epoch, n_batch, num_batches ) :
         a = [ x.item() if torch.is_tensor(x) else x for x in losses ]
