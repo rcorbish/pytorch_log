@@ -158,7 +158,7 @@ class Run :
         buf = None        
         if len( images ) > 0 :
             buf = io.BytesIO()
-            imageio.mimwrite( buf, images, format='gif', duration=0.25, loop=2 )
+            imageio.mimwrite( buf, images, format='gif', duration=0.08, loop=2 )
             buf.seek(0)
         return buf
 
